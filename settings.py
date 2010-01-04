@@ -132,6 +132,8 @@ IGNORE_APP_SETTINGS = IGNORE_APP_URLSAUTO = (
 
 AUTHENTICATION_BACKENDS = ('djangoutils.rpx.backends.RpxBackend', )
 
+MESSAGE_STORAGE = 'djangodev.contrib.messages.storage.cookie.CookieStorage'
+
 # Remote access to production server (e.g., via manage.py shell --remote)
 DATABASE_OPTIONS = {
     # Override remoteapi handler's path (default: '/remote_api').
