@@ -55,3 +55,27 @@ RPX_TRUSTED_PROVIDERS = ('Google',)
 
 # Sets the log level for the RPX backend
 RPX_LOG_LEVEL = logging.ERROR
+
+# due to possible initialization order issues, we do not import from django.conf.settings
+# instead directly get the specific settings from (project)/settings_overrides.py
+try:
+    import settings_overrides
+
+    try:
+        RPXNOW_API_KEY = settings_overrides.RPXNOW_API_KEY
+    except AttributeError:
+        pass
+
+    try:
+        RPXNOW_REALM = settings_overrides.RPXNOW_REALM
+    except AttributeError:
+        pass
+
+    try:
+        RPX_TRUSTED_PROVIDERS = settings_overrides.RPX_TRUSTED_PROVIDERS
+    except AttributeError:
+        pass
+
+except ImportError:
+    pass
+
