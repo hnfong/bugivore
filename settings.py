@@ -44,8 +44,8 @@ LANGUAGE_CODE = 'en'
 
 # Restrict supported languages (and JS media generation)
 LANGUAGES = (
-    ('de', 'German'),
     ('en', 'English'),
+    ('zh', 'Chinese'),
 )
 
 TEMPLATE_CONTEXT_PROCESSORS = (
@@ -101,8 +101,6 @@ INSTALLED_APPS = (
     'django.contrib.sites',
     'appenginepatcher',
     'ragendja',
-    'myapp',
-    'registration',
     'mediautils',
 )
 
