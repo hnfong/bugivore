@@ -120,8 +120,9 @@ INSTALLED_APPS = (
     'appenginepatcher',
     'ragendja',
 
+    'djangoutils', # must preceed anything that import user
+    'djangodev',
     'rpx',
-    'djangoutils',
 
     'mediautils', # probably mediautils should be last?
 )
@@ -130,7 +131,9 @@ INSTALLED_APPS = (
 IGNORE_APP_SETTINGS = IGNORE_APP_URLSAUTO = (
 )
 
-AUTHENTICATION_BACKENDS = ('djangoutils.rpx.backends.RpxBackend', )
+AUTHENTICATION_BACKENDS = ('rpx.backends.RpxBackend', )
+
+MESSAGE_STORAGE = 'djangodev.contrib.messages.storage.cookie.CookieStorage'
 
 # Remote access to production server (e.g., via manage.py shell --remote)
 DATABASE_OPTIONS = {

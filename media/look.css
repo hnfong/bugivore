@@ -1,15 +1,83 @@
 /* Add your global CSS (i.e., code that is project-specific and not part of any app) here. */
 
 body {
-  padding: 15px 20px;
 }
 
-#clickme {
-  background-color: #eeeeee;
-  border: 1px solid black;
-  padding: 3px;
+h1, h2, h3, h4, h5, h6 {
+  font-family: "Palatino Linotype", Palatino, Palladio, "URW Palladio L",
+  "Book Antiqua", Baskerville, "Bookman Old Style", "Bitstream Charter",
+  "Nimbus Roman No9 L", Garamond, "Apple Garamond", "ITC Garamond Narrow",
+  "New Century Schoolbook", "Century Schoolbook", "Century Schoolbook L",
+  Georgia, serif;
+}
+
+div#toolbox {
+  text-align: right;
+}
+
+div#toolbox span.sep {
+  margin: 0px 6px;
+}
+
+div#header {
+  min-height: 65px;
+}
+
+div#logo {
+  font-size: 140%;
+  font-style: italic;
+}
+
+div#notifications {
+  position: absolute 100px 65px;
+}
+
+div#notifications ul, div#notifications ol {
+  margin: 0px 1.5em;
+}
+
+div#content {
+  min-height: 500px;
 }
 
 #footer {
-  clear: both;
+  text-align: center;
+  font-size: 80%;
+  margin-top: -18px;
+}
+
+.left-aligned {
+  text-align: left;
+}
+
+.palatino, .serif {
+  font-family: "Palatino Linotype", Palatino, Palladio, "URW Palladio L",
+  "Book Antiqua", Baskerville, "Bookman Old Style", "Bitstream Charter",
+  "Nimbus Roman No9 L", Garamond, "Apple Garamond", "ITC Garamond Narrow",
+  "New Century Schoolbook", "Century Schoolbook", "Century Schoolbook L",
+  Georgia, serif;
+}
+
+.georgia {
+  font-family: Constantia, "Lucida Bright", Lucidabright, "Lucida Serif",
+  Lucida, "DejaVu Serif," "Bitstream Vera Serif", "Liberation Serif", Georgia,
+  serif;
+}
+
+.verdana, .sans {
+  font-family: Corbel, "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans",
+  "DejaVu Sans", "Bitstream Vera Sans", "Liberation Sans", Verdana,
+  "Verdana Ref", sans-serif;
+}
+
+.trebuchet {
+  font-family: "Segoe UI", Candara, "Bitstream Vera Sans", "DejaVu Sans",
+  "Bitstream Vera Sans", "Trebuchet MS", Verdana, "Verdana Ref", sans-serif;
+}
+
+.monospace, tt, pre, code {
+  font-family: Consolas, "Andale Mono WT", "Andale Mono", "Lucida Console",
+  "Lucida Sans Typewriter", "DejaVu Sans Mono", "Bitstream Vera Sans Mono",
+  "Liberation Mono", "Nimbus Mono L", Monaco, "Courier New", Courier,
+  monospace;
 }
