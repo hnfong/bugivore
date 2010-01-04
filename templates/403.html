@@ -1,0 +1,10 @@
+{% extends 'error.html' %}
+{% load i18n %}
+
+{% block error_title %}{% trans 'Forbidden' %}{% endblock error_title %}
+
+{% block error_header %}Not allowed{% endblock error_header %}
+
+{% block error_message %}
+It seems that you are not allowed to view this page, located at {{ request.path }}.
+{% endblock error_message %}

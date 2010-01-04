@@ -1,6 +1,19 @@
-{% extends 'base.html' %}
-{% block title %}Page not found{% endblock %}
+{% extends 'error.html' %}
+{% load i18n %}
 
-{% block content %}
-The page you requested could not be found.
-{% endblock %}
+{% block error_title %}{% trans 'Page not found' %}{% endblock error_title %}
+
+{% block error_header %}{% trans 'Page not found.' %}{% endblock error_header %}
+
+{% block error_message %}
+<p class="append-bottom">We cannot find the page you requested, located at <tt>{{ request.path }}</tt>.</p>
+{% comment %} TODO: more explanation {% endcomment %}
+
+{% if debug %}
+<h3>Debug Information</h3>
+<p class="append-bottom">The following information is displayed only in debug mode:</p>
+<hr />
+<div>{{ request.response|safe }}</div>
+{% comment %} hack: reinsert the css block to override styles {% endcomment %}
+{% endif %}
+{% endblock error_message %}

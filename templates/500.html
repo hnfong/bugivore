@@ -1,6 +1,18 @@
-{% extends 'base.html' %}
-{% block title %}Server error{% endblock %}
+{% extends 'error.html' %}
+{% load i18n %}
 
-{% block content %}
-There was an error while handling your request.
-{% endblock %}
+{% block error_title %}{% trans 'Server error' %}{% endblock error_title %}
+
+{% block error_header %}{% trans 'Oops… There is a glitch.'%}{% endblock error_header %}
+
+{% block error_message %}
+<p class="append-bottom">{% trans 'Our server has some problem, and we cannot serve you properly.  We apologize and will try to fix it.' %}</p>
+{% comment %} TODO: more explanation{% endcomment %}
+
+{% if debug %}
+<h3>Debug Information</h3>
+<p class="append-bottom">The following information is displayed only in debug mode:</p>
+<hr />
+<div>{{ request.response|safe }}</div>
+{% endif %}
+{% endblock error_message %}

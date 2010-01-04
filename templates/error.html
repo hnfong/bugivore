@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+
+{% block title %}{% block error_title %}{{ error_title|safe }}{% endblock %} | {{ block.super }}{% endblock title %}
+
+{% block loginout %}{% endblock loginout %}
+
+{% block content %}
+<h2>{% block error_header %}{{ error_header|safe }}{% endblock %}</h2>
+{% block error_message %}{{ error_message|safe }}{% endblock %}
+{% endblock content %}
