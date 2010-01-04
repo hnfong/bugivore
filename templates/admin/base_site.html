@@ -1,17 +1,20 @@
 {% extends "admin/base.html" %}
 {% load i18n %}
 
-{% block title %}{{ title }} | {% trans 'Django site admin' %}{% endblock %}
+{% block title %}{{ title }} | {% trans 'Bugivore' %}{% endblock %}
 
 {% block userlinks %}
-<a href="/">Back to sample project</a> /
+<a href="{% url frontpage %}">Back to Site</a> /
 {% url django-admindocs-docroot as docsroot %}{% if docsroot %}<a href="{{ docsroot }}">{% trans 'Documentation' %}</a> / {% endif %}
+{% comment %}
 <a href="{{ root_path }}password_change/">{% trans 'Change password' %}</a> /
-<a href="{% url django.contrib.auth.views.logout %}">{% trans 'Log out' %}</a>
+{% endcomment %}
+{% url django-admindocs-docroot as docsroot %}{% if docsroot %}<a href="{{ docsroot }}">{% trans 'Documentation' %}</a> / {% endif %}
+<a href="{% url djangoutils.auth.views.logout %}">{% trans 'Logout' %}</a>
 {% endblock %}
 
 {% block branding %}
-<h1 id="site-name">{% trans 'Django administration' %}</h1>
+<h1 id="site-name">{% trans 'Bugivore administration' %}</h1>
 {% endblock %}
 
 {% block nav-global %}{% endblock %}
