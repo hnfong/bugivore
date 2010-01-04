@@ -102,15 +102,15 @@ INSTALLED_APPS = (
     'appenginepatcher',
     'ragendja',
     'mediautils',
+
+    'rpx',
 )
 
 # List apps which should be left out from app settings and urlsauto loading
 IGNORE_APP_SETTINGS = IGNORE_APP_URLSAUTO = (
-    # Example:
-    # 'django.contrib.admin',
-    # 'django.contrib.auth',
-    # 'yetanotherapp',
 )
+
+AUTHENTICATION_BACKENDS = ('djangoutils.rpx.backends.RpxBackend', )
 
 # Remote access to production server (e.g., via manage.py shell --remote)
 DATABASE_OPTIONS = {
