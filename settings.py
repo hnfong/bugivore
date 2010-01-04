@@ -31,6 +31,8 @@ if on_production_server:
 # Make this unique, and don't share it with anybody.
 SECRET_KEY = '1234567890'
 
+DEBUGKEY = '1234567890'
+
 #ENABLE_PROFILER = True
 #ONLY_FORCED_PROFILE = True
 #PROFILE_PERCENTAGE = 25
@@ -53,10 +55,21 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     'django.core.context_processors.media',
     'django.core.context_processors.request',
     'django.core.context_processors.i18n',
+
+    'djangodev.contrib.messages.context_processors.messages',
+    'djangoutils.core.context_processors.site',
+    'djangoutils.core.context_processors.debug',
+    'djangoutils.core.context_processors.ip_address',
+    'rpx.context_processors.login_logout',
 )
 
 MIDDLEWARE_CLASSES = (
-    'ragendja.middleware.ErrorMiddleware',
+    # Custom handling of 403, 404, 500, etc
+    'djangoutils.http.middleware.HTTPStatusMiddleware',
+    # Order matters, see e.g.
+    #   http://docs.djangoproject.com/en/dev/topics/http/middleware/
+
+#    'ragendja.middleware.ErrorMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     # Django authentication
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -69,6 +82,9 @@ MIDDLEWARE_CLASSES = (
     'ragendja.sites.dynamicsite.DynamicSiteIDMiddleware',
     'django.contrib.flatpages.middleware.FlatpageFallbackMiddleware',
     'django.contrib.redirects.middleware.RedirectFallbackMiddleware',
+
+    # messages must be after sessions
+    'djangodev.contrib.messages.middleware.MessageMiddleware',
 )
 
 # Google authentication
@@ -77,9 +93,11 @@ MIDDLEWARE_CLASSES = (
 # Hybrid Django/Google authentication
 #AUTH_USER_MODULE = 'ragendja.auth.hybrid_models'
 
+DISABLED_URL = '/account/disabled/'
 LOGIN_URL = '/account/login/'
 LOGOUT_URL = '/account/logout/'
 LOGIN_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL = '/'
 
 INSTALLED_APPS = (
     # Add jquery support (app is in "common" folder). This automatically
@@ -101,10 +119,11 @@ INSTALLED_APPS = (
     'django.contrib.sites',
     'appenginepatcher',
     'ragendja',
-    'mediautils',
 
     'rpx',
     'djangoutils',
+
+    'mediautils', # probably mediautils should be last?
 )
 
 # List apps which should be left out from app settings and urlsauto loading
