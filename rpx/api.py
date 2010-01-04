@@ -94,11 +94,12 @@ class RpxAuthInfo:
                     if profile.has_key('preferredUsername'):
                         self.user_name = profile.get('preferredUsername') 
                     elif profile.has_key('displayName'):
-                        #@todo: Create user name from display name!
                         self.user_name = profile.get('displayName')
+                    elif profile.has_key('name') and profile['name'].has_key('formatted'):
+                        self.user_name = profile['name']['formatted']
                     else:
-                        #@todo: Create user name from email
-                        pass  
+                        self.user_name = self.email
+                        # TODO: set default name to other fields, or raise KeyError?
                 
                 else:
                     self.status = self.MISSING

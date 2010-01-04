@@ -43,7 +43,10 @@ import unittest
 
 from google.appengine.ext import db
 from django.utils import simplejson
+from django.conf import settings
 from django.contrib.auth.models import User
+from django.contrib.sites.models import Site
+from ragendja.dbutils import generate_key_name
 
 from rpx.models import RpxData
 from rpx.backends import RpxBackend
@@ -84,9 +87,16 @@ class TestRpxBackends(unittest.TestCase):
     
     def setUp(self):
         self.backend = RpxBackend()
+        # Need to hack get_current
+        from django.conf import settings
+        from django.contrib.sites.models import SiteManager, Site
+        def get_current(self):
+            return Site(domain = 'test.domain.com', name = 'test.site')
+        if not hasattr(settings, 'SITE_ID'):
+            SiteManager.get_current = get_current
         
     def tearDown(self):
-       pass
+        pass
     
     def testCreateRpxKey(self):
         """Tests create_rpx_key().
@@ -96,7 +106,7 @@ class TestRpxBackends(unittest.TestCase):
            
         """
         rpx_id = "abcd1234"
-        rpx_key = "key:abcd1234"
+        rpx_key = generate_key_name(rpx_id)
         
         self.assert_(RpxBackend.create_rpx_key(self.backend, rpx_id) == rpx_key)
         
@@ -105,84 +115,6 @@ class TestRpxBackends(unittest.TestCase):
             self.assert_(False)
         except:
             pass
-        
-    def testCreateNewUsername(self):
-        """Tests RpxBackend.create_username().
-        
-        
-        """
-        
-        testJson = '''
-            {
-              "profile": {
-                "displayName": "brian",
-                "preferredUsername": "brian",
-                "email": "brian@brian2.com",
-                "providerName": "Other",
-                "identifier": "http:\/\/brian2.myopenid.com\/"
-              },
-              "stat": "ok"
-            }'''
-
-        json = simplejson.loads(testJson)
-        
-        auth_info = RpxAuthInfo(json)
-        
-        self.assert_(RpxBackend.create_username(self.backend, auth_info, 1) != 
-                     RpxBackend.create_username(self.backend, auth_info, 2))
-        
-    def testCreateNewUsernameWithInvalidInput(self):
-        
-        testJsonOk = '''
-            {
-              "profile": {
-                "displayName": "brian",
-                "preferredUsername": "brian",
-                "email": "brian@brian2.com",
-                "providerName": "Other",
-                "identifier": "http:\/\/brian2.myopenid.com\/"
-              },
-              "stat": "ok"
-            }'''
-
-        json = simplejson.loads(testJsonOk)
-        
-        auth_info = RpxAuthInfo(json)
-                                
-        try:
-            username = RpxBackend.create_username(self.backend, None, None)
-            self.assert_(False)
-        except ValueError:
-            pass
-        
-        try:
-            username = RpxBackend.create_username(self.backend, auth_info, "stringObject")
-            self.assert_(False)
-        except ValueError:
-            pass
-
-        testJsonNotOk = '''
-            {
-              "profile": {
-                "displayName": "brian",
-                "preferredUsername": "brian",
-                "email": "brian@brian2.com",
-                "providerName": "Other",
-                "identifier": "http:\/\/brian2.myopenid.com\/"
-              },
-              "stat": "nok"
-            }'''
-
-        json = simplejson.loads(testJsonNotOk)
-        
-        auth_info = RpxAuthInfo(json)
-
-        try:
-            username = RpxBackend.create_username(self.backend, auth_info, 1)
-            self.assert_(False)
-        except ValueError:
-            pass
-        
         
     def testCreateNewUser(self):
         """Tests RpxBackend.create_user().
@@ -222,7 +154,7 @@ class TestRpxBackends(unittest.TestCase):
         user2 = RpxBackend.create_user(self.backend, auth_info)
 
         self.assert_(user2)
-        self.assert_(user2.username == "brian1")
+        self.assert_(user2.username == "brian")
         self.assert_(user2.email == "brian@brian2.com")
         
         RpxBackend.delete_user(self.backend, user)
@@ -252,17 +184,16 @@ class TestRpxBackends(unittest.TestCase):
         """Tests RpxBackend.delete_user().
         
         Make sure that delete_user can handle None and that it only deletes Users!
-        
         """
         try:
             RpxBackend.delete_user(self.backend, None)
-            self.assert_(false)
+            self.assert_(False)
         except ValueError:
             pass
         
         try:
             RpxBackend.delete_user(self.backend, "stringObject")
-            self.assert_(false)
+            self.assert_(False)
         except ValueError:
             pass
         
@@ -427,6 +358,8 @@ class TestRpxBackends(unittest.TestCase):
         
         self.assert_(new_user)
         self.assert_(new_user.username == "james")
+
+        self.backend.delete_user(new_user)
         
 
 ##################################################################################
@@ -564,7 +497,7 @@ class TestRpxApi(unittest.TestCase):
         #Test simplejson
         try:
             json = simplejson.loads(testJson)
-            assert_(false) #simplejson should throw exception!
+            assert_(False) #simplejson should throw exception!
         except ValueError:
             pass   
         
@@ -601,3 +534,6 @@ class testRpxData(unittest.TestCase):
         
         RpxBackend.delete_user(self.backend, user)
         
+rpx_backends_suite = unittest.TestLoader().loadTestsFromTestCase(TestRpxBackends)
+rpx_api_suite = unittest.TestLoader().loadTestsFromTestCase(TestRpxBackends)
+test_suite = unittest.TestSuite([rpx_backends_suite, rpx_api_suite])

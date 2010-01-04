@@ -41,6 +41,8 @@
 
 from django.contrib.auth.models import User
 from google.appengine.ext import db
+from ragendja import dbutils
+
 from rpx.models import RpxData
 from rpx.api import RpxApi
 from rpx.api import RpxAuthInfo
@@ -51,19 +53,14 @@ import logging
 TRUSTED_PROVIDERS=set(getattr(settings,'RPX_TRUSTED_PROVIDERS', []))
 
 class RpxBackend:
-    """Implements an authentication backend that uses RPX to authenticate users.
-    
-    
-    """
+    """Implements an authentication backend that uses RPX to authenticate users."""
     def __init__(self):
-        self.logger = logging.getLogger()
+        self.logger = logging.getLogger('rpx')
         self.logger.setLevel(settings.RPX_LOG_LEVEL)
         self.api = RpxApi()
     
     def authenticate(self, token=''):
-        """Required method for authentication backends.
-        
-        """
+        """Required method for authentication backends."""
         auth_info = self.api.get_auth_info(token)
         
         if not auth_info:
@@ -74,9 +71,7 @@ class RpxBackend:
     
     
     def get_user(self, id):    
-        """Required method for authentication backends.
-        
-        """
+        """Required method for authentication backends. """
         if not id:
             raise ValueError
         
@@ -95,81 +90,43 @@ class RpxBackend:
         
         Adds "key:" prefix as suggested by
         http://code.google.com/appengine/docs/python/datastore/modelclass.html#Model
-        
         """
         if not rpx_id:
             raise ValueError
-        
-        return "key:" + rpx_id
-    
-    def create_username(self, rpx_auth_info, seed):
-        
-        if not rpx_auth_info or not seed or not seed.__class__ == int:
-            raise ValueError
-        
-        if rpx_auth_info.get_status() != RpxAuthInfo.OK:
-            raise ValueError
-        
-        return rpx_auth_info.get_user_name() + str(seed)
+        return dbutils.generate_key_name(rpx_id)
     
     def create_user(self, rpx_auth_info):
-        """Creates user based on the RPX authentication info.
-        
-                
-        
-        """
-        username=rpx_auth_info.get_user_name()
-        user=None
+        """Creates user based on the RPX authentication info."""
+        username = rpx_auth_info.get_user_name()
 
-        i=1
-        not_created = True
-        while not_created: #TODO: this loop could be improved
-            user_query = User.gql("WHERE username = :1",
-                                 username)
-  
-            if user_query.count() > 0:
-                username = self.create_username(rpx_auth_info, i)
-                i+=1
-            else:
-                user = User(username=username, email=rpx_auth_info.get_email())
-                user.is_active = True
-                user.is_staff = False
-                user.is_superuser = False
-                user.set_unusable_password()
-                user.save()
-                self.logger.debug("RpxBackend: Created user: " + user.username + " \r\n")
-                rpxdata = RpxData(key_name=self.create_rpx_key(rpx_auth_info.get_rpx_id()), user=user)
-                rpxdata.save()
-                self.logger.debug("RpxBackend: RpxData created\r\n")
-                not_created = False
+        user = dbutils.db_create(User, username=username, email=rpx_auth_info.get_email())
+        if not user:
+            raise Exception('Cannot create user (name = %s)' % username)
+        self.logger.debug("RpxBackend: Created user(%s) as %s\r\n" % (user.username, str(user)))
+        user.is_active = True
+        user.is_staff = False
+        user.is_superuser = False
+        user.set_unusable_password()
+        user.save()
+        rpxdata = RpxData(key_name=self.create_rpx_key(rpx_auth_info.get_rpx_id()), user=user)
+        rpxdata.save()
+        self.logger.debug("RpxBackend: RpxData created\r\n")
 
         return user
         
     def delete_user(self, user):
-        """Deletes user and any associated RPX IDs.
-        
-        """
+        """Deletes user and any associated RPX IDs."""
         if not user or user.__class__ != User:
             raise ValueError
         
         self.logger.debug("RpxBackend: User " + user.username + " will be deleted\r\n")
-        
-        rpx_query = RpxData.gql("WHERE user = :1",
-                                 user)
-        results = rpx_query.fetch(rpx_query.count())
-        
-        for rpx_entry in results:
-            self.logger.debug("RpxBackend: RPX entry with id " + str(rpx_entry.key()) + " deleted\r\n")
-            rpx_entry.delete()
-        
         user.delete()
+        # try to rely on auto_cleanup
         
         self.logger.debug("RpxBackend: User deleted\r\n")
                 
     def get_user_by_rpx_id(self, rpx_id):
-        """Returns user using the RPX ID.
-        
-        """
+        """Returns user using the RPX ID."""
         if not rpx_id:
             raise ValueError
         
@@ -186,7 +143,6 @@ class RpxBackend:
         
         The open Id provider needs to be in the TRUSTED_PROVIDERS
         list to be able to do this mapping.
-        
         """
         if not auth_info or auth_info.__class__ != RpxAuthInfo:
             raise ValueError
@@ -195,8 +151,7 @@ class RpxBackend:
         
         if auth_info.get_provider() in TRUSTED_PROVIDERS:
             
-            user_candidates = User.gql("WHERE email = :1",
-                                        auth_info.get_email())
+            user_candidates = dbutils.get_object_list(User, 'email = ', auth_info.get_email())
   
             if user_candidates.count() == 1:
                 users = user_candidates.fetch(1)
@@ -212,9 +167,8 @@ class RpxBackend:
         Based on the information in auth_info, this func either retuns an existing user,
         mapps a new open ID to an existing user and returns that user, or creates and
         returns a new user.
-        
         """
-        if not auth_info:
+        if not auth_info or auth_info.__class__ <> RpxAuthInfo:
             raise ValueError
         
         # Try to get user from RPX ID

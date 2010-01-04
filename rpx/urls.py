@@ -40,7 +40,7 @@
 #
 
 from django.conf.urls.defaults import *
-from rpx.views import *
+from rpx.views import rpx_login_response
 
 urlpatterns = patterns('',
                        url(r'^login/$', rpx_login_response, name='rpx_login_response_url'),
