@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load rpx_tags %}
+
+{% block title %}{% trans 'Logout' %} | {{ block.super }}{% endblock title %}
+
+{% block loginout %}{% endblock loginout %}
+
+{% block content %}
+<div class="span-7 colborder">
+<h2>Logout</h2>
+You are about to logout from {{ sitename }}.<br />
+</div>
+<div class="span-13">
+<form action="{{ request.path }}" method="POST">
+<input style="height: 40px; width: 80px; font-size: 120%;" type="submit" value="{% trans 'Logout' %}" />
+</form>
+</div>
+{% endblock content %}

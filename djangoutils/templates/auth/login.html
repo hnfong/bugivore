@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% load rpx_tags %}
+
+{% block title %}Login | {{ block.super }}{% endblock title %}
+
+{% block loginout %}{% endblock loginout %}
+
+{% block content %}
+<div class="span-7 colborder">
+<h2>Login</h2>
+Login with your favourite identity providers.<br />
+</div>
+<div class="span-13">
+{% rpx_iframe next %}
+</div>
+{% endblock content %}

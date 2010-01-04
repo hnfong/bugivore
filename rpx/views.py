@@ -1,4 +1,4 @@
-# Copyrighc (c) 2009, Benny Bergsell
+# Copyright (c) 2009, Benny Bergsell
 # All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or 
