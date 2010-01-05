@@ -46,11 +46,13 @@ def reset_test_site(get_current):
 
 import djangoutils.admin.tests
 import djangoutils.auth.tests
+import djangoutils.db.tests
 import djangoutils.http.tests
 
 test_mods = (
     djangoutils.admin.tests,
     djangoutils.auth.tests,
+    djangoutils.db.tests,
     djangoutils.http.tests,
 )
 

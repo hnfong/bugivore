@@ -1,19 +1,13 @@
 # -*- coding: utf-8 -*-
 from django.contrib.sites.models import Site
-from django.core.exceptions import ImproperlyConfigured
 
 def site(request):
-    """
-    Returns current sitename
-    """
-    try:
-        current_site = Site.objects.get_current()
-        return {
-            'domain': current_site.domain,
-            'sitename': current_site.name,
-        }
-    except ImproperlyConfigured:
-        return {}
+    "Returns current sitename"
+    current_site = Site.objects.get_current()
+    return {
+        'domain': current_site.domain,
+        'sitename': current_site.name,
+    }
 
 def debug(request):
     "Returns context variables helpful for debugging."

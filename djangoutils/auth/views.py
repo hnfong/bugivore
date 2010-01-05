@@ -19,6 +19,10 @@ def login(request, context=None):
     )
 
 def logout(request, context=None):
+    """
+    Display the logout page for logout confirmation in case of GET, or log the
+    user out and redirect to the next page in case of POST (confirmation).
+    """
     if request.method == 'POST':
         context = context or {}
         next = context.pop('next', None) or request.GET.get('next') or getattr(settings, 'LOGOUT_REDIRECT_URL')
