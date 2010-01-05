@@ -112,15 +112,3 @@ def active_staff_only(function=None, not_staff_url=None, not_active_url=None,
     if function:
         return decorate(function)
     return decorate
-
-
-def _monkey_patch_decorators():
-    import inspect
-    import logging
-
-    from django.contrib.auth import decorators
-    decorators.login_required = login_required
-    logging.debug('%s: login_required patched' % inspect.getfile(inspect.currentframe()))
-
-
-_monkey_patch_decorators()

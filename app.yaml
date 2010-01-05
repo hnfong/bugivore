@@ -16,9 +16,9 @@ handlers:
   secure: optional
 
 - url: /admin/.*
-  script: common/appenginepatch/main.py
+  script: main.py
   secure: always
 
 - url: /.*
-  script: common/appenginepatch/main.py
+  script: main.py
   secure: optional
