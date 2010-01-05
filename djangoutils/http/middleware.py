@@ -29,7 +29,7 @@ class HTTPStatusMiddleware(object):
         try:
             if status in ( 403, 404, 500, ):
                 request.response = response.content
-                return self.fetch_page(request, status)
+                return self._fetch_page(request, status)
         except Exception, e:
             if status <> 500: # otherwise, serving 500 raises exception
                 return self.server_error(request, e)
@@ -67,16 +67,16 @@ class HTTPStatusMiddleware(object):
         try: # try coustom response
             if exception:
                 request.response = str(exception)
-            return self.fetch_page(request, 500)
+            return self._fetch_page(request, 500)
         except:
             pass
 
 # TODO: More detailed report from a static file
-        response = http.HttpResponse("Server error: we are having a big trouble, or otherwise you wouldn't see this.")
+        response = HttpResponse("Server error: we are having a big trouble, or otherwise you wouldn't see this.")
         response.status_code = 500
         return response
 
-    def fetch_page(self, request, status):
+    def _fetch_page(self, request, status):
         """
         Fetch a customized page for handling HTTP status
 

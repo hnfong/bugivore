@@ -1,12 +1,8 @@
 # -*- coding: utf-8 -*-
 import unittest
-import copy
-import random
-from string import letters, digits
-
 from django.http import HttpRequest, HttpResponse
 from django.template import TemplateSyntaxError
-
+from djangoutils.tests import random_str, setup_test_site, reset_test_site
 from djangoutils.http.middleware import HTTPStatusMiddleware
 
 # recursively test submodule
@@ -20,88 +16,114 @@ for mod in test_mods:
     if hasattr(mod, 'test_suite'):
         test_suite.addTest(mod.test_suite)
 
-# test setup
-
-#
-# Need to hack get_current
-#
-from django.conf import settings
-from django.contrib.sites.models import SiteManager, Site
-def get_current(self):
-    return Site(domain = random_str(), name = random_str())
-if not hasattr(settings, 'SITE_ID'):
-    SiteManager.get_current = get_current
-
-def middleware():
-    return """>>> middleware = HTTPStatusMiddleware()
-"""
-
-def random_str(a = 1, b = 100):
-    return "".join([ random.choice(letters + digits + '/~._') for i in xrange(random.randint(a, b)) ])
-
-def request(path, method):
-    return """>>> request = HttpRequest()
->>> request.path = '%(path)s'
->>> request.method = '%(method)s'
-""" % { 'path': path, 'method' : method, }
-
-def random_response(status):
-    return """>>> content = random_str(1, 2000)
->>> response = HttpResponse(content)
->>> response.status_code = %(status)s
-""" % { 'status': status, }
-
-def setup(status = 200, method = 'GET', path = random_str()):
-    return middleware() + request(path, method) + random_response(status)
-
-# some cases
-
-noerror_indent = '...     '
-
-def noerror(expr, result = ''):
-    return """>>> try:
-%(indent)s%(expr)s
-%(indent)s'no error'
-... except Exception, e:
-%(indent)se
-...
-%(result)s'no error'
-""" % { 'expr': expr, 'result': result, 'indent': noerror_indent }
-
-def samestatus(status = 200, method = 'GET', path = random_str()):
-    return setup(status, method, path) + noerror(
-        'middleware.process_response(request, response).status_code',
-        "%d\n" % status,
-    )
-
-def unmodified(status = 200, method = 'GET', path = random_str()):
-    return setup(status, method, path) + \
-        """>>> middleware.process_response(request, response) == response
-True
-"""
-
 # tests
 
-__test__ = {
-'testProcessResponseUnmodify200: 200 success response should be unmodified GET': unmodified(200, 'GET'),
-'testProcessResponseUnmodify200: 200 success response should be unmodified POST': unmodified(200, 'POST'),
-'testProcessResponseUnmodify302: 302 redirection response should be unmodified GET': unmodified(302, 'GET'),
-'testProcessResponseUnmodify302: 302 redirection response should be unmodified POST': unmodified(302, 'POST'),
-'testServerErrorRobust: server_error should not crash on its own GET': setup(500, 'GET') + noerror('res = middleware.server_error(request)'),
-'testServerErrorRobust: 404 should give 404 GET': samestatus(404, 'GET'),
-'testServerErrorRobust: 404 should give 404 POST': samestatus(404, 'POST'),
-'testServerErrorRobust: 403 should give 403 GET': samestatus(403, 'GET'),
-'testServerErrorRobust: 404 should give 403 POST': samestatus(403, 'POST'),
-'testServerErrorRobust: 500 should give 500 GET': samestatus(500, 'GET'),
-'testServerErrorRobust: 500 should give 500 POST': samestatus(500, 'POST'),
-'testProcessException: An exception should give 500 GET':
-setup(200, 'GET') +
-""">>> middleware.process_exception(request, TemplateSyntaxError()).status_code
-500
-""",
-'testProcessException: An exception should give 500 POST':
-setup(200, 'POST') +
-""">>> middleware.process_exception(request, TemplateSyntaxError()).status_code
-500
-""",
-}
+class TestMiddleware(unittest.TestCase):
+    def setUp(self):
+        self.get_current = setup_test_site()
+        self.middleware = HTTPStatusMiddleware()
+
+    def tearDown(self):
+        reset_test_site(self.get_current)
+
+    def _random_request(self, path=None, method=None):
+        """
+        Prepare a random request object with given path and method.
+
+        Default path is random_str() if None is given.
+        Default method is 'GET' if None is given.
+        """
+        request = HttpRequest()
+        request.path = path or random_str()
+        request.method = method or 'GET'
+        return request
+
+    def _random_response(self, status=None, content=None):
+        """
+        Prepare a random response object with given status and content.
+
+        Default status is 200 is None is given.
+        Default content is random_str() if None is given.
+        """
+        response = HttpResponse(content or random_str())
+        response.status_code = status
+        return response
+
+    def _random_request_response(self, path=None, method=None, status=None,
+            content=None):
+        """
+        Prepare a pair of random request/response objects. See
+        _random_request() and _random_response().
+        """
+        return self._random_request(path, method), \
+            self._random_response(status, content)
+
+    def _assert_process_response_unmodified(self, **kargs):
+        """
+        Run middleware.process_response on a pair of randomly generated
+        request/response objects, and assert that the returned response is
+        the original one.
+        """
+        request, response = self._random_request_response(**kargs)
+        new_response = self.middleware.process_response(request, response)
+        self.assertEqual(new_response, response)
+
+    def _assert_process_response_same_status(self, **kargs):
+        """
+        Run middleware.process_response on a pair of randomly generated
+        request/response objects, and assert that the returned response has
+        the same status as the original one.
+        """
+        request, response = self._random_request_response(**kargs)
+        new_response = self.middleware.process_response(request, response)
+        self.assertEqual(new_response.status_code, response.status_code)
+
+    def testProcessResponseUnmodifiedOn200GET(self):
+        self._assert_process_response_unmodified(status=200, method='GET')
+
+    def testProcessResponseUnmodifiedOn200POST(self):
+        self._assert_process_response_unmodified(status=200, method='POST')
+
+    def testProcessResponseUnmodifiedOn302GET(self):
+        self._assert_process_response_unmodified(status=302, method='GET')
+
+    def testProcessResponseUnmodifiedOn302POST(self):
+        self._assert_process_response_unmodified(status=302, method='POST')
+
+    def testServerErrorDoesNotCrashOn500GET(self):
+        request, response = self._random_request_response(status=500, method='GET')
+        self.middleware.server_error(request)
+
+    def testServerErrorDoesNotCrashOn500POST(self):
+        request, response = self._random_request_response(status=500, method='POST')
+        self.middleware.server_error(request)
+
+    def testProcessResponseSameStatusOn403GET(self):
+        self._assert_process_response_same_status(status=403, method='GET')
+
+    def testProcessResponseSameStatusOn403POST(self):
+        self._assert_process_response_same_status(status=403, method='POST')
+
+    def testProcessResponseSameStatusOn404GET(self):
+        self._assert_process_response_same_status(status=404, method='GET')
+
+    def testProcessResponseSameStatusOn404POST(self):
+        self._assert_process_response_same_status(status=404, method='POST')
+
+    def testProcessResponseSameStatusOn500GET(self):
+        self._assert_process_response_same_status(status=500, method='GET')
+
+    def testProcessResponseSameStatusOn500POST(self):
+        self._assert_process_response_same_status(status=500, method='POST')
+
+    def testProcessExceptionRaise500OnGET(self):
+        request = self._random_request(method='GET')
+        new_response = self.middleware.process_exception(request, TemplateSyntaxError())
+        self.assertEqual(new_response.status_code, 500)
+
+    def testProcessExceptionRaise500OnPOST(self):
+        request = self._random_request(method='POST')
+        new_response = self.middleware.process_exception(request, TemplateSyntaxError())
+        self.assertEqual(new_response.status_code, 500)
+
+test_suite.addTest(unittest.TestLoader().loadTestsFromTestCase(TestMiddleware))

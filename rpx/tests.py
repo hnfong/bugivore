@@ -52,6 +52,9 @@ from rpx.models import RpxData
 from rpx.backends import RpxBackend
 from rpx.api import RpxAuthInfo
 
+# apply appropriate patching, to simulate the production environment
+import main
+
 class TestRpxBackends(unittest.TestCase):
     """Test the functionality offered by backends.py"""
     

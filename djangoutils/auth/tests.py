@@ -21,6 +21,26 @@ for mod in test_mods:
     if hasattr(mod, 'test_suite'):
         test_suite.addTest(mod.test_suite)
 
+# tests
+
+__test__ = {
+'Test module working': """
+>>> True
+True
+""",
+'Test urlsauto has rootpatterns': """
+>>> urlsauto.rootpatterns is None
+False
+""",
+}
+
+class TestDecorators(unittest.TestCase):
+    def setUp(self):
+        pass
+
+    def tearDown(self):
+        pass
+
 #def user(username = random(), email = random(), first_name = random(), last_name = random(), active = True,
 #authenticated = True, staff = False, superuser = False):
 #    return """>>> user = User(username = '%(username)s',
@@ -48,15 +68,3 @@ for mod in test_mods:
 #%(result)s'no error'
 #""" % { 'expr': expr, 'result': result, 'indent': noerror_indent }
 
-# tests
-
-__test__ = {
-'Test module working': """
->>> True
-True
-""",
-'Test urlsauto has rootpatterns': """
->>> urlsauto.rootpatterns is None
-False
-""",
-}
