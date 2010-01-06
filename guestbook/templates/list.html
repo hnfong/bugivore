@@ -1,0 +1,14 @@
+{% extends 'guestbook/base.html' %}
+{% load helpers %}
+
+{% block content %}
+<h2>Lastest Greetings</h2>
+<ul>
+{% for greeting in greetings %}
+  <li>{{ greeting.author.username }}: {{ greeting.content|truncate:80 }}
+  <span class="quiet serif" style="margin-left: 20px; font-size: 80%">{{ greeting.date|timesince }} ago</span></li>
+{% endfor %}
+</ul>
+
+<a href="/guestbook/sign/" class="login_required">add greeting</a>
+{% endblock content %}

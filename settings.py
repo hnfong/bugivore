@@ -126,6 +126,8 @@ INSTALLED_APPS = (
     'djangodev',
     'rpx',
 
+    'guestbook',
+
     'mediautils', # probably mediautils should be last?
 )
 
