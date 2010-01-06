@@ -93,6 +93,8 @@ MIDDLEWARE_CLASSES = (
 # Hybrid Django/Google authentication
 #AUTH_USER_MODULE = 'ragendja.auth.hybrid_models'
 
+AUTH_ADMIN_MODULE = 'djangoutils.admin.useradmin'
+
 DISABLED_URL = '/account/disabled/'
 LOGIN_URL = '/account/login/'
 LOGOUT_URL = '/account/logout/'
@@ -132,8 +134,6 @@ IGNORE_APP_SETTINGS = IGNORE_APP_URLSAUTO = (
 )
 
 AUTHENTICATION_BACKENDS = ('rpx.backends.RpxBackend', )
-
-MESSAGE_STORAGE = 'djangodev.contrib.messages.storage.cookie.CookieStorage'
 
 MESSAGE_STORAGE = 'djangodev.contrib.messages.storage.cookie.CookieStorage'
 

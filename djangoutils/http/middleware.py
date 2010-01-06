@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Based on ragendja ErrorMiddleware
 
-from django.http import HttpResponse
+from django.http import HttpResponse, Http404
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 from google.appengine.runtime.apiproxy_errors import CapabilityDisabledError
@@ -15,6 +15,10 @@ class HTTPStatusMiddleware(object):
     """
     def process_exception(self, request, exception):
         try:
+            if isinstance(exception, Http404):
+                response = HttpResponse('Http404 :' + str(exception))
+                response.status_code = 404
+                return response
             if isinstance(exception, CapabilityDisabledError):
                 return self.maintenence(request, exception)
             return self.server_error(request, exception)
