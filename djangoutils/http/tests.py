@@ -3,7 +3,7 @@ import unittest
 from django.http import HttpRequest, HttpResponse
 from django.template import TemplateSyntaxError
 from djangoutils.tests import random_str, setup_test_site, reset_test_site
-from djangoutils.http.middleware import HTTPStatusMiddleware
+from djangoutils.http.middleware import HttpStatusMiddleware
 
 # recursively test submodule
 
@@ -21,7 +21,7 @@ for mod in test_mods:
 class TestMiddleware(unittest.TestCase):
     def setUp(self):
         self.get_current = setup_test_site()
-        self.middleware = HTTPStatusMiddleware()
+        self.middleware = HttpStatusMiddleware()
 
     def tearDown(self):
         reset_test_site(self.get_current)

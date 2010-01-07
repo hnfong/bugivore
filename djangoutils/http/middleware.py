@@ -9,14 +9,14 @@ from google.appengine.runtime.apiproxy_errors import CapabilityDisabledError
 # TODO: more testing for extreme robustness
 # TODO: when confident with error handling, write a form to receive feedback
 
-class HTTPStatusMiddleware(object):
+class HttpStatusMiddleware(object):
     """
     Custom handling of 403, 404, 500, etc.
     """
     def process_exception(self, request, exception):
         try:
             if isinstance(exception, Http404):
-                response = HttpResponse('Http404 :' + str(exception))
+                response = HttpResponse(self._exception_str(exception))
                 response.status_code = 404
                 return response
             if isinstance(exception, CapabilityDisabledError):
@@ -70,10 +70,13 @@ class HTTPStatusMiddleware(object):
 
         try: # try coustom response
             if exception:
-                request.response = str(exception)
+                request.response = self._exception_str(exception)
             return self._fetch_page(request, 500)
         except:
             pass
+
+    def _exception_str(self, exception):
+        return '%s: %s' % (type(exception).__name__, unicode(exception))
 
 # TODO: More detailed report from a static file
         response = HttpResponse("Server error: we are having a big trouble, or otherwise you wouldn't see this.")

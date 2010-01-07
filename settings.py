@@ -65,7 +65,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
 
 MIDDLEWARE_CLASSES = (
     # Custom handling of 403, 404, 500, etc
-    'djangoutils.http.middleware.HTTPStatusMiddleware',
+    'djangoutils.http.middleware.HttpStatusMiddleware',
     # Order matters, see e.g.
     #   http://docs.djangoproject.com/en/dev/topics/http/middleware/
 

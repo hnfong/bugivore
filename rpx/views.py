@@ -59,7 +59,7 @@ def rpx_login_response(request):
     logger = logging.getLogger('rpx')
     logger.setLevel(settings.RPX_LOG_LEVEL)
     
-    token = request.GET.get('token') or request.POST.get('token')
+    token = request.POST.get('token')
     next = request.GET.get('next')
     logger.debug("rpx_login_response: Next = " + str(next))
     next = next or getattr(django_settings, 'LOGIN_REDIRECT_URL')
@@ -98,7 +98,7 @@ def rpx_map_response(request):
     logger = logging.getLogger('rpx')
     logger.setLevel(settings.RPX_LOG_LEVEL)
     
-    token = request.GET.get('token') or request.POST.get('token')
+    token = request.POST.get('token')
     
     if not token:
         logger.error("rpx_login_response: No token was present") 
