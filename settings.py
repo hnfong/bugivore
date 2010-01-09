@@ -122,9 +122,10 @@ INSTALLED_APPS = (
     'appenginepatcher',
     'ragendja',
 
-    'djangoutils', # must preceed anything that import user
+    'djangoutils',
     'djangodev',
     'rpx',
+    'wmd',
 
     'guestbook',
 

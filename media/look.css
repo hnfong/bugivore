@@ -1,8 +1,5 @@
 /* Add your global CSS (i.e., code that is project-specific and not part of any app) here. */
 
-body {
-}
-
 h1, h2, h3, h4, h5, h6 {
   font-family: "Palatino Linotype", Palatino, Palladio, "URW Palladio L",
   "Book Antiqua", Baskerville, "Bookman Old Style", "Bitstream Charter",
@@ -24,7 +21,7 @@ div#header {
 }
 
 div#logo {
-  font-size: 140%;
+  font-size: large;
   font-style: italic;
 }
 
@@ -42,8 +39,8 @@ div#content {
 
 #footer {
   text-align: center;
-  font-size: 80%;
-  margin-top: -18px;
+  font-size: small;
+  margin-top: -20px;
 }
 
 .left-aligned {
