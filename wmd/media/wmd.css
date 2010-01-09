@@ -3,7 +3,7 @@
   position: relative;
 }
 
-.wmd-panel
+.wmd-panel, .resizable-textarea .grippie
 {
   position: relative;
 	margin-left: 25%;
@@ -47,6 +47,10 @@ http://stackoverflow.com/questions/479837/how-can-i-hook-up-wmd-editor-on-my-dja
   padding: 5px;
 }
 
+#wmd-preview ul {
+  margin-left: 1em;
+}
+
 #wmd-output 
 { 
 	background-color: Pink;
@@ -60,7 +64,7 @@ http://stackoverflow.com/questions/479837/how-can-i-hook-up-wmd-editor-on-my-dja
 	margin-bottom: 5px;
 	margin-top: 10px;
 	padding: 0px;  
-	height: 20px;
+	height: 8px;
 }
 
 .wmd-spacer

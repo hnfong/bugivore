@@ -122,10 +122,12 @@ INSTALLED_APPS = (
     'appenginepatcher',
     'ragendja',
 
+    'wmd',
+    'resizer',
+
     'djangoutils',
     'djangodev',
     'rpx',
-    'wmd',
 
     'guestbook',
 
