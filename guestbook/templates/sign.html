@@ -3,9 +3,9 @@
 {% block content %}
 <h2>Add your greeting</h2>
 
-<form action="{{ request.fullpath }}" method="POST" class="observe">
+<form action="{{ request.fullpath }}" method="POST" class="dirty_check">
   <div class="fieldWrapper span-22 last">
-    {{ form.message.errors }}
+    <div class="ui-state-error">{{ form.message.errors }}</div>
     {{ form.message }}
   </div>
   <div class="fieldWrapper span-8">

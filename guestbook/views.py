@@ -6,7 +6,6 @@ from django.shortcuts import render_to_response
 from django.template import RequestContext
 from django.utils.translation import ugettext as _
 
-from djangoutils.core.helpers import clean_html
 from djangoutils.auth.decorators import login_required
 
 from guestbook.models import Greeting
@@ -31,7 +30,7 @@ def sign(request, context=None):
     if request.method == 'POST':
         form = GreetingForm(request.POST)
         if form.is_valid():
-            message = clean_html(form.cleaned_data['message'].strip())
+            message = form.cleaned_data['message']
             greeting = Greeting(author = request.user, message = message)
             greeting.put()
             return HttpResponseRedirect(reverse(list))

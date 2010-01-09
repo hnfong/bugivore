@@ -18,10 +18,9 @@ class GreetingForm(forms.ModelForm):
             pass
 
     def clean_message(self):
-        from djangoutils.core.helpers import clean_html
-        message = clean_html(self.cleaned_data['message'].strip())
+        message = Greeting.strip_message(self.cleaned_data['message'])
         try:
-            message = Greeting.message.validate(message)
+            Greeting.message.validate(message)
         except db.BadValueError, e:
             self._errors['message'] = ErrorList([force_unicode(e)])
         return message
