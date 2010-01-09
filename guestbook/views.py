@@ -6,6 +6,7 @@ from django.shortcuts import render_to_response
 from django.template import RequestContext
 from django.utils.translation import ugettext as _
 
+from djangoutils.core.helpers import clean_html
 from djangoutils.auth.decorators import login_required
 
 from guestbook.models import Greeting
@@ -24,15 +25,16 @@ def sign(request, context=None):
     # set the default logout location to the frontpage of guestbook
     request.GET = request.GET.copy() # make GET mutable
     request.GET[REDIRECT_FIELD_NAME] = reverse('guestbook.views.list')
+
+    from guestbook.forms import GreetingForm
+
     if request.method == 'POST':
-
-        message = request.POST.get('message')
-
-        if message and message.strip():
-            message = message.strip()
-            greeting = Greeting(author = request.user, content = message)
-            greeting.save()
-            return list(request)
-        else:
-            error.append('Message cannot be empty.')
-    return render_to_response('guestbook/sign.html', { 'error': error }, RequestContext(request))
+        form = GreetingForm(request.POST)
+        if form.is_valid():
+            message = clean_html(form.cleaned_data['message'].strip())
+            greeting = Greeting(author = request.user, message = message)
+            greeting.put()
+            return HttpResponseRedirect(reverse(list))
+    else:
+        form = GreetingForm()
+    return render_to_response('guestbook/sign.html', { 'form': form }, RequestContext(request))

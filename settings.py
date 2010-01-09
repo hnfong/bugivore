@@ -125,6 +125,7 @@ INSTALLED_APPS = (
     'wmd',
     'resizer',
     'dirty_form',
+    'BeautifulSoup',
 
     'djangoutils',
     'djangodev',

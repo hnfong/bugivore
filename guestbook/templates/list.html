@@ -5,8 +5,8 @@
 <h2>Lastest Greetings</h2>
 <ul>
 {% for greeting in greetings %}
-  <li>{{ greeting.author.username }}: {{ greeting.content|truncate:80 }}
-  <span class="quiet serif" style="margin-left: 20px; font-size: 80%">{{ greeting.date|timesince }} ago</span></li>
+  <li>{{ greeting.author.username }}: <span class="quiet serif" style="margin-left: 40px; font-size: 80%">{{ greeting.date|timesince }} ago</span>
+  {{ greeting.message|safe }}</li>
 {% endfor %}
 </ul>
 

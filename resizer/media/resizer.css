@@ -15,5 +15,5 @@ div.grippie {
   height: 20%;
 }
 input, textarea, #wmd-preview {
-  padding: 2px 5px; /* the horizontal padding should match that of .grippie */
+  padding: 3px 5px; /* the horizontal padding should match that of .grippie */
 }
