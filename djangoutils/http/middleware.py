@@ -27,7 +27,7 @@ class HttpStatusMiddleware(object):
 
     def process_response(self, request, response):
         status = response.status_code
-        if status < 400: # optimize for common cases
+        if status < 400 or hasattr(response, 'HttpStatusProcessed'): # optimize for common cases
             return response
 
         try:
@@ -92,4 +92,5 @@ class HttpStatusMiddleware(object):
         """
         response = render_to_response(str(status) + '.html', context_instance=RequestContext(request))
         response.status_code = status
+        response.HttpStatusProcessed = True
         return response

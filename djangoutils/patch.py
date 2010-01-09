@@ -9,8 +9,5 @@ def patch_django():
     from djangoutils.db.patch import patch_db
     patch_db()
 
-    from djangoutils.forms.patch import patch_forms
-    patch_forms()
-
     from djangoutils.http.patch import patch_debug
     patch_debug()
