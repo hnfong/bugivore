@@ -25,15 +25,15 @@ def sign(request, context=None):
     request.GET = request.GET.copy() # make GET mutable
     request.GET[REDIRECT_FIELD_NAME] = reverse('guestbook.views.list')
 
-    from guestbook.forms import GreetingForm
+    from guestbook.forms import MessageOnlyForm
 
     if request.method == 'POST':
-        form = GreetingForm(request.POST)
+        form = MessageOnlyForm(request.POST)
         if form.is_valid():
             message = form.cleaned_data['message']
             greeting = Greeting(author = request.user, message = message)
             greeting.put()
             return HttpResponseRedirect(reverse(list))
     else:
-        form = GreetingForm()
+        form = MessageOnlyForm()
     return render_to_response('guestbook/sign.html', { 'form': form }, RequestContext(request))

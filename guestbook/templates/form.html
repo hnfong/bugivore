@@ -1,0 +1,10 @@
+<form action="{{ request.fullpath }}" method="POST">
+  <div class="fieldWrapper span-22 last">
+    {% if forms.message.errors %}<div class="ui-state-error">{{ form.message.errors }}</div>{% endif %}
+    {{ form.message }}
+  </div>
+  <div class="fieldWrapper span-8">
+    <div class="em serif"><label for="form_user">From</label> {{ user.username }}</div>
+  </div>
+  <div class="span-2 last append-bottom"><input type="submit" value="Submit" /></div>
+</form>

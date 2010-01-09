@@ -7,6 +7,8 @@ from google.appengine.ext import db
 from guestbook.models import Greeting
 
 class GreetingForm(forms.ModelForm):
+    class Meta:
+        attrs = { 'class': 'dirty-check', }
 
     def __init__(self, *args, **kargs):
         super(GreetingForm, self).__init__(*args, **kargs)
@@ -25,6 +27,7 @@ class GreetingForm(forms.ModelForm):
             self._errors['message'] = ErrorList([force_unicode(e)])
         return message
 
+class MessageOnlyForm(GreetingForm):
     class Meta:
         model = Greeting
         exclude = ('author', 'date',)

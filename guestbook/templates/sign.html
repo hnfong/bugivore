@@ -3,14 +3,5 @@
 {% block content %}
 <h2>Add your greeting</h2>
 
-<form action="{{ request.fullpath }}" method="POST" class="dirty_check">
-  <div class="fieldWrapper span-22 last">
-    <div class="ui-state-error">{{ form.message.errors }}</div>
-    {{ form.message }}
-  </div>
-  <div class="fieldWrapper span-8">
-    <div class="em serif"><label for="form_user">From</label> {{ user.username }}</div>
-  </div>
-  <div class="span-2 last append-bottom"><input type="submit" value="Submit" /></div>
-</form>
+{% include 'guestbook/form.html' %}
 {% endblock content %}
