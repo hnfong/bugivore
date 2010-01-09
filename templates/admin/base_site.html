@@ -4,6 +4,8 @@
 {% block title %}{{ title }} | {{ sitename }}{% endblock %}
 
 {% block extrahead %}{{ block.super }}
+<script src="https://www.google.com/jsapi"></script>
+<script> google.load("jquery", "1.3.2"); google.load("jqueryui", "1.7.2"); </script>
 <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}wmd/wmd.css" />
 <script type="text/javascript" src="{{ MEDIA_URL }}wmd/showdown.js"></script>
 <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}resizer/resizer.css" />
