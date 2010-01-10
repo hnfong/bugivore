@@ -6,10 +6,7 @@
 {% block extrahead %}{{ block.super }}
 <script src="https://www.google.com/jsapi"></script>
 <script> google.load("jquery", "1.3.2"); google.load("jqueryui", "1.7.2"); </script>
-<link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}wmd/wmd.css" />
-<script type="text/javascript" src="{{ MEDIA_URL }}wmd/showdown.js"></script>
-<link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}resizer/resizer.css" />
-<script type="text/javascript" src="{{ MEDIA_URL }}resizer/jquery.textarearesizer.js"></script>
+<link rel="stylesheet" type="text/css"  media="screen, projection" href="{{ MEDIA_URL }}admin_media/css/combined-{% if LANGUAGE_BIDI %}rtl{% else %}ltr{% endif %}.css" />
 <script type="text/javascript" src="{{ MEDIA_URL }}combined-{{ LANGUAGE_CODE }}.js" /></script>
 {% endblock extrahead %}
 
@@ -28,5 +25,3 @@
 {% endblock %}
 
 {% block nav-global %}{% endblock %}
-
-{% block footer %}{{ block.super }}{% include 'resizer/script.html' %}{% endblock footer %}

@@ -1,5 +1,13 @@
 /* Add your global CSS (i.e., code that is project-specific and not part of any app) here. */
 
+/* for jQuery UI */
+.ui-state-hightlight, .ui-state-error {
+  list-style-type: none;
+  padding: .5em;
+}
+
+/* serif header fontstack */
+
 h1, h2, h3, h4, h5, h6 {
   font-family: "Palatino Linotype", Palatino, Palladio, "URW Palladio L",
   "Book Antiqua", Baskerville, "Bookman Old Style", "Bitstream Charter",
