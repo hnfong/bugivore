@@ -124,8 +124,8 @@ INSTALLED_APPS = (
 
     'wmd',
     'resizer',
-    'dirty_form',
     'BeautifulSoup',
+    'scripts', # should be after all other scripts
 
     'djangoutils',
     'djangodev',
@@ -138,6 +138,7 @@ INSTALLED_APPS = (
 
 # List apps which should be left out from app settings and urlsauto loading
 IGNORE_APP_SETTINGS = IGNORE_APP_URLSAUTO = (
+    'BeautifulSoup',
 )
 
 AUTHENTICATION_BACKENDS = ('rpx.backends.RpxBackend', )
