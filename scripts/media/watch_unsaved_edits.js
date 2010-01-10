@@ -1,4 +1,10 @@
 $.WatchUnsaved = {
+  /* jQuery selector for forms to watch */
+  selector   : 'form.watch_unsaved',
+
+  /* messge to display */
+  message    : 'You have unsaved changes.',
+
   /* all watched forms, set during document.onready */
   forms      : null,
 
@@ -22,34 +28,36 @@ $.WatchUnsaved = {
         return submitCallback.apply(this, arguments);
     }
   },
-};
 
-$(document).ready(function() {
-  $.WatchUnsaved.forms = $('form.watch_unsaved');
-  $.WatchUnsaved.forms.each(function() {
-    var form = $(this);
-    $.WatchUnsaved.resetSubmitting(form[0]);
-    $.WatchUnsaved.wrapOnsubmit(form[0]);
+  /* watch forms */
+  watchForms: function() {
+    $.WatchUnsaved.forms = jQuery(this.selector);
+    $.WatchUnsaved.forms.each(function() {
+      var form = $(this);
 
-    /* save initial data for all textarea under this form */
-    $('textarea', form).each(function() {
-      $(this).data('_watchInitVal', $(this).val());
+      $.WatchUnsaved.resetSubmitting(form[0]);
+      $.WatchUnsaved.wrapOnsubmit(form[0]);
+
+      /* save initial data for all textarea under this form */
+      $('textarea', form).each(function() {
+        $(this).data('_watchInitVal', $(this).val());
+      });
+
+      /* We assume that the form is submitted via a submit button (i.e. not
+       * other images or plain buttons). In such case, we protect the form
+       * against multiple submission by disabling the submit button. */
+      $(':submit', form).each(function() {
+        submit = $(this);
+        submit[0].onclick = function() {
+          submit[0].disabled = true;
+          submit[0]._isSubmitting = true;
+        };
+      });
     });
+  },
 
-    /* We assume that the form is submitted via a submit button (i.e. not
-     * other images or plain buttons). In such case, we protect the form
-     * against multiple submission by disabling the submit button. */
-    $(':submit', form).each(function() {
-      submit = $(this);
-      submit[0].onclick = function () {
-        submit[0].disabled = true;
-        submit[0]._isSubmitting = true;
-      };
-    });
-  });
-
-  window.onbeforeunload = function() {
-    var msg = 'You have unsaved changes.';
+  /* check forms */
+  checkForms: function() {
     var isDirty = false;
 
     $.WatchUnsaved.forms.each(function() {
@@ -72,7 +80,7 @@ $(document).ready(function() {
         var form = $(this);
         $.WatchUnsaved.resetSubmitting(form[0]);
 
-        $(':submit', form).each(function (){
+        $(':submit', form).each(function() {
           submit = $(this);
           if (submit[0]._isSubmitting === true) {
             submit[0].disabled = false;
@@ -81,7 +89,13 @@ $(document).ready(function() {
         });
       });
 
-      return msg;
+      return $.WatchUnsaved.message;
     }
-  }
+  },
+};
+
+/* hook */
+$(document).ready(function() {
+  $.WatchUnsaved.watchForms();
+  window.onbeforeunload = $.WatchUnsaved.checkForms;
 });
