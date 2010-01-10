@@ -1,6 +1,6 @@
-<form action="{{ request.fullpath }}" method="POST">
+<form action="{{ request.fullpath }}" method="POST" class="dirty_check">
   <div class="fieldWrapper span-22 last">
-    {% if forms.message.errors %}<div class="ui-state-error">{{ form.message.errors }}</div>{% endif %}
+    {% if form.message.errors %}<div class="ui-state-error">{{ form.message.errors }}</div>{% endif %}
     {{ form.message }}
   </div>
   <div class="fieldWrapper span-8">

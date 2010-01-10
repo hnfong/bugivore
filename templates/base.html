@@ -11,6 +11,7 @@
     {% endblock css %}
 
     {% block js %}
+    {% block googlejs %}<script src="https://www.google.com/jsapi"></script><script> google.load("jquery", "1.3.2"); google.load("jqueryui", "1.7.2"); </script>{% endblock googlejs %}
     <script type="text/javascript" src="{{ MEDIA_URL }}combined-{{ LANGUAGE_CODE }}.js" /></script>
     {% endblock js %}
 

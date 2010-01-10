@@ -11,9 +11,9 @@ def validate_length(message):
     return message
 
 class Greeting(db.Model):
-    author = db.ReferenceProperty(User, verbose_name=_('Author'))
+    author = db.ReferenceProperty(User, required=True, verbose_name=_('Author'))
     message = db.StringProperty(multiline=True, verbose_name=_('Message'), validator=validate_length)
-    date = db.DateTimeProperty(auto_now_add = True, verbose_name=_('Date and Time'))
+    date = db.DateTimeProperty(required=True, auto_now_add = True, verbose_name=_('Date and Time'))
 
     def __unicode__(self):
         from django.utils.html import strip_tags

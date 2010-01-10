@@ -4,4 +4,7 @@
 <h2>Add your greeting</h2>
 
 {% include 'guestbook/form.html' %}
+
+<hr />
+<a class="append-bottom" href="{% url guestbook.views.list %}">back to guestbook</a>
 {% endblock content %}

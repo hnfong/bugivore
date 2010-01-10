@@ -1,7 +1,7 @@
 $(document).ready(function() {
-  $("form:not(.allow_dirty)").dirty_form();
+  $("form.dirty_check").dirty_form();
 
-  $("form:not(.allow_dirty)").submit(function() {
+  $("form.dirty_check").submit(function() {
     jQuery(this).find(".changed").removeClass("changed");
     return true;
   })
