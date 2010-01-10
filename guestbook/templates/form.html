@@ -1,6 +1,8 @@
-<form action="{{ request.fullpath }}" method="POST" class="dirty_check">
+<form action="{{ request.fullpath }}" method="POST" class="watch_unsaved">
   <div class="fieldWrapper span-22 last">
-    {% if form.message.errors %}<div class="ui-state-error">{{ form.message.errors }}</div>{% endif %}
+    {% if form.message.errors %}<ul class="ui-state-error ui-corner-all">
+    {% for error in form.message.errors %}<li><span class="ui-icon ui-icon-alert"
+    style="float: left; margin-right: .3em; top: .1em;"></span>{{ error }}</li>{% endfor %}</ul>{% endif %}
     {{ form.message }}
   </div>
   <div class="fieldWrapper span-8">
