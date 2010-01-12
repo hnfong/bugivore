@@ -132,6 +132,7 @@ INSTALLED_APPS = (
     'rpx',
 
     'guestbook',
+    'bugs',
 
     'mediautils', # probably mediautils should be last?
 )
