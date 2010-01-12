@@ -9,7 +9,7 @@ from bugs.models import Bug
 from bugs.forms import BugForm
 
 def index(request):
-    l = models.Bug.all().fetch(1000)
+    l = Bug.all().fetch(1000)
     return HttpResponse(str( l ))
 
 # See http://code.google.com/appengine/articles/app-engine-patch.html

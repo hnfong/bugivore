@@ -7,9 +7,6 @@ from google.appengine.ext import db
 from bugs import models
 
 class BugForm(forms.ModelForm):
-    def __init__(self, *args, **kargs):
-        super(BugForm, self).__init__(*args, **kargs)
-
     class Meta:
         model = models.Bug
         exclude = ('user', )
