@@ -7,9 +7,6 @@ from google.appengine.ext import db
 from guestbook.models import Greeting
 
 class GreetingForm(forms.ModelForm):
-    class Meta:
-        attrs = { 'class': 'dirty-check', }
-
     def __init__(self, *args, **kargs):
         super(GreetingForm, self).__init__(*args, **kargs)
 
