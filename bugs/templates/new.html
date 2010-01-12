@@ -1,0 +1,12 @@
+{% extends 'bugs/base.html' %}
+
+{% block content %}
+<h2>Enter new Bug</h2>
+<form action="{{ request.fullpath }}" method="post">
+<table>
+{{ form.as_table }}
+</table>
+<input type="submit" class="append-bottom" value="submit">
+</form>
+{% endblock content %}
+

@@ -5,4 +5,5 @@ from guestbook import views
 
 urlpatterns = patterns('',
     url(r'^$', 'bugs.views.index'),
+    url(r'^new/', 'bugs.views.new'),
 )
